@@ -10,17 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Setup Python for script execution
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.x"
-
-      # Step 3: Sync language files
       - name: Sync language files
         run: |
           # Set the directory containing the language files
@@ -29,10 +21,10 @@ jobs:
           # Change to the language directory
           cd "$LANG_DIR"
           
-          # Keep a backup of the 'en_us.json' file
+          # Backup the content of en_us.json
           EN_US_CONTENT=$(cat en_us.json)
           
-          # Delete all language files except 'en_us.json'
+          # Delete all JSON files except en_us.json
           find . -type f -name '*.json' ! -name 'en_us.json' -delete
           
           # List of all Minecraft language codes
@@ -49,12 +41,12 @@ jobs:
             "th_th" "tlh_aa" "tr_tr" "uk_ua" "val_es" "vi_vn" "zh_cn" "zh_tw"
           )
           
-          # Create new language files using 'en_us.json' content
+          # Generate all language files
           for lang in "${LANG_CODES[@]}"; do
             echo "$EN_US_CONTENT" > "$lang.json"
           done
 
-      # Step 4: Commit and push changes
+      # Step 3: Commit and push changes
       - name: Commit and push changes
         run: |
           git config --local user.name "github-actions[bot]"
@@ -63,46 +55,10 @@ jobs:
           # Stage the changes
           git add "Server Pack/assets/minecraft/lang/*.json"
           
-          # Commit if there are changes
+          # Commit and push if there are changes
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
             git commit -m "Sync language files for all Minecraft locales"
             git push
-
-  release:
-    if: contains(github.event.head_commit.message, 'RELEASE')
-    needs: sync-lang-files
-    runs-on: ubuntu-latest
-
-    steps:
-      # Step 1: Checkout repository
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      # Step 2: Zip the "Server Pack" folder
-      - name: Create ZIP file
-        run: |
-          # Create a ZIP of the Server Pack directory
-          zip -r "Server_Pack.zip" "Server Pack"
-
-      # Step 3: Upload ZIP to a GitHub release
-      - name: Upload to GitHub Release
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ github.event.repository.releases_url }}
-          asset_path: ./Server_Pack.zip
-          asset_name: Server_Pack_${{ github.sha }}.zip
-          asset_content_type: application/zip
-
-      # Step 4: Create or update the release
-      - name: Create GitHub Release
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ github.sha }}
-          release_name: "Release ${{ github.sha }}"
-          body: |
-            Release generated from commit: ${{ github.sha }}
-            - Server Pack ZIP uploaded.
-          draft: false
-          prerelease: false
+          fi
