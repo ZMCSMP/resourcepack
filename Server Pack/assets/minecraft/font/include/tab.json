@@ -1,0 +1,8 @@
+{
+    "providers": [
+      {"type": "bitmap","file": "icons:tab/space.png","ascent": -32768,"height": -3,"chars": ["⻔"]},
+      {"type": "bitmap","file": "icons:tab/space.png","ascent": -32768,"height": -3,"chars": [""]},
+      {"type": "bitmap","file": "icons:tab/logo.png","ascent": 30,"height": 60,"chars": ["섏섐",""]},
+      {"type": "bitmap","file": "icons:tab/bossbar.png","ascent": 8,"height": 24,"chars": ["お"]}
+    ]
+}

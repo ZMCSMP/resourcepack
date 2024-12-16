@@ -1,0 +1,7 @@
+{
+  "providers": [
+    {"type": "bitmap","file": "icons:menu/exit_footer.png","ascent": 7,"height": 108,"chars": [""]},
+    {"type": "bitmap","file": "icons:menu/exit_header.png","ascent": 89,"height": 90,"chars": [""]},
+    {"type": "bitmap","file": "icons:menu/discord.png","ascent": 9,"height": 13,"chars": [""]}
+  ]
+}
