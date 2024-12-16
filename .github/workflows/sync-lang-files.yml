@@ -87,12 +87,13 @@ jobs:
         continue-on-error: false
 
       # Step 3: Create release
-      - name: Create release
+      - name: Create a new release
+        id: create_release
         uses: actions/create-release@v1
         with:
-          tag_name: "release-${{ github.sha[0:7] }}"
-          release_name: "Release ${{ github.sha[0:7] }}"
-          body: "Automatically generated release for commit ${{ github.sha[0:7] }}"
+          tag_name: "release-${{ github.sha}}"
+          release_name: "Release ${{ github.sha}}"
+          body: "Automatically generated release for commit ${{ github.sha}}"
           draft: false
           prerelease: false
         env:
@@ -104,5 +105,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./server_pack.zip
-          asset_name: ServerPack_${{ github.sha[0:7] }}.zip
+          asset_name: ServerPack_${{github.sha}}.zip
           asset_content_type: application/zip
